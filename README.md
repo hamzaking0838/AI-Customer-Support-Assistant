@@ -58,7 +58,7 @@ SENTRY_DSN=your_sentry_dsn
 
 1. **Clone or Navigate to the workspace:**
    ```bash
-   git clone <YOUR_GITHUB_REPOSITORY_URL>
+   git clone <https://github.com/hamzaking0838/AI-Customer-Support-Assistant>
    cd ai-support-customer
    ```
 
