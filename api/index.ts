@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import * as express from 'express';
+import * as path from 'path';
 import serverless from 'serverless-http';
 import { NestFactory, HttpAdapterHost, BaseExceptionFilter } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
@@ -8,12 +9,26 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as Sentry from '@sentry/nestjs';
 // Load AppModule from compiled output if available (dist), otherwise fall back to src.
 let AppModule: any;
-try {
-  // When running the built files (dist), prefer the compiled AppModule
-  AppModule = require('../dist/src/app.module').AppModule;
-} catch (e) {
-  // Fallback for environments that compile on-demand (Vercel) or local dev
-  AppModule = require('../src/app.module').AppModule;
+// Resolve AppModule from several well-known locations to be robust across
+// local builds and Vercel's serverless runtime bundling.
+const tryRequire = (p: string) => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const mod = require(p);
+    return mod && mod.AppModule ? mod.AppModule : null;
+  } catch (err) {
+    return null;
+  }
+};
+
+AppModule =
+  tryRequire(path.join(process.cwd(), 'dist', 'src', 'app.module')) ||
+  tryRequire(path.join(process.cwd(), 'src', 'app.module')) ||
+  tryRequire(path.join(__dirname, '..', 'dist', 'src', 'app.module')) ||
+  tryRequire(path.join(__dirname, '..', 'src', 'app.module'));
+
+if (!AppModule) {
+  throw new Error('Could not load AppModule from dist or src.');
 }
 
 // Initialize Sentry if configured
