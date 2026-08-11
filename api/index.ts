@@ -6,7 +6,15 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import { ValidationPipe, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as Sentry from '@sentry/nestjs';
-import { AppModule } from '../src/app.module';
+// Load AppModule from compiled output if available (dist), otherwise fall back to src.
+let AppModule: any;
+try {
+  // When running the built files (dist), prefer the compiled AppModule
+  AppModule = require('../dist/src/app.module').AppModule;
+} catch (e) {
+  // Fallback for environments that compile on-demand (Vercel) or local dev
+  AppModule = require('../src/app.module').AppModule;
+}
 
 // Initialize Sentry if configured
 const sentryDsn = process.env.SENTRY_DSN;
