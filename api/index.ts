@@ -5,7 +5,8 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import { ValidationPipe, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as Sentry from '@sentry/nestjs';
-import { AppModule } from '../src/app.module';
+// @ts-ignore
+import { AppModule } from '../dist/src/app.module';
 
 // Initialize Sentry if configured
 const sentryDsn = process.env.SENTRY_DSN;
