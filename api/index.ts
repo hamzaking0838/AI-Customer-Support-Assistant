@@ -60,7 +60,15 @@ async function bootstrapServer() {
         .addTag('Support')
         .build();
       const document = SwaggerModule.createDocument(app, config);
-      SwaggerModule.setup('api/docs', app, document);
+      SwaggerModule.setup('api/docs', app, document, {
+        customCssUrl: [
+          'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.32.8/swagger-ui.min.css',
+        ],
+        customJs: [
+          'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.32.8/swagger-ui-bundle.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.32.8/swagger-ui-standalone-preset.js',
+        ],
+      });
     } catch (e) {
       // ignore swagger init errors in serverless environment
     }
