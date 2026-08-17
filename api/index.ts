@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import * as express from 'express';
+const express = require('express');
 import { NestFactory, HttpAdapterHost, BaseExceptionFilter } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { ValidationPipe, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
@@ -31,7 +31,7 @@ class SentryExceptionFilter extends BaseExceptionFilter {
   }
 }
 
-let cachedServer: express.Express;
+let cachedServer: any;
 
 async function bootstrapServer() {
   if (!cachedServer) {
